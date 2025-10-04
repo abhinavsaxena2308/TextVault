@@ -1,36 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TextVault Live</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TextVault</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Navbar -->
   <nav>
-    <div class="left-nav">
+    <div class="navbar-left">
       <h1>TextVault 🔒</h1>
       <span id="sessionName">No session</span>
     </div>
-    <div class="nav-buttons">
-      <button id="saveBtn">💾 Save</button>
-      <button id="newSessionBtn">🆕 New Session</button>
-      <button id="shareBtn">🔗 Share</button>
+    <div class="navbar-right">
+      <button id="saveBtn" title="Save all tabs">💾 Save</button>
+      <button id="newSessionBtn" title="Create new session">🆕 New Session</button>
     </div>
   </nav>
 
-  <textarea id="textArea" placeholder="Start typing... (auto-saves in real time)"></textarea>
+  <!-- Tabs -->
+  <div id="tabBar">
+    <div id="tabs"></div>
+    <button id="newTabBtn">+ New Tab</button>
+  </div>
+
+  <!-- Text Area -->
+  <textarea id="textArea" placeholder="Start typing..."></textarea>
 
   <!-- Session Modal -->
   <div id="sessionModal">
     <div class="modal-content">
-      <h2>Join or Create Session</h2>
-      <input type="text" id="sessionID" placeholder="Session ID" />
-      <input type="password" id="sessionPass" placeholder="Password" />
+      <h2>Join Session</h2>
+      <input type="text" id="sessionID" placeholder="Session ID" autocomplete="off" value="">
+      <input type="password" id="sessionPass" placeholder="Password" autocomplete="off" value="">
       <button id="joinBtn">Join Session</button>
     </div>
   </div>
+
+  <!-- Toast -->
+  <div id="toast"></div>
+
+  <!-- Firebase Config -->
   <script src="config.js"></script>
-  <script type="module" src="script.js"></script>
+  <!-- Script -->
+  <script type="module" src="script.js" defer></script>
 </body>
 </html>
