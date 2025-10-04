@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TextVault Live</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav>
+    <div class="left-nav">
+      <h1>TextVault 🔒</h1>
+      <span id="sessionName">No session</span>
+    </div>
+    <div class="nav-buttons">
+      <button id="newSessionBtn">🆕 New Session</button>
+      <button id="shareBtn">🔗 Share</button>
+    </div>
+  </nav>
+
+  <textarea id="textArea" placeholder="Start typing... (auto-saves in real time)"></textarea>
+
+  <!-- Session Modal -->
+  <div id="sessionModal">
+    <div class="modal-content">
+      <h2>Join or Create Session</h2>
+      <input type="text" id="sessionID" placeholder="Session ID" />
+      <input type="password" id="sessionPass" placeholder="Password" />
+      <button id="joinBtn">Join Session</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
