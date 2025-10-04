@@ -1,11 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
+dotenv.config(); // load .env
+
 const app = express();
-dotenv.config();
 
-app.use(express.static('public')); // your HTML/CSS/JS files in /public
+// serve static frontend files
+app.use(express.static('public'));
 
-// endpoint to serve config
+// dynamically serve config.js
 app.get('/config.js', (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
   res.send(`
@@ -16,9 +18,10 @@ app.get('/config.js', (req, res) => {
       projectId: "${process.env.FIREBASE_PROJECT_ID}",
       storageBucket: "${process.env.FIREBASE_STORAGE_BUCKET}",
       messagingSenderId: "${process.env.FIREBASE_MESSAGING_SENDER_ID}",
-      appId: "${process.env.FIREBASE_APP_ID}"
+      appId: "${process.env.FIREBASE_APP_ID}",
+      measurementId: "${process.env.FIREBASE_MEASUREMENT_ID}"
     };
   `);
 });
 
-app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+app.listen(3000, () => console.log('Server running at http://localhost:3000'));
