@@ -1,0 +1,25 @@
+{
+  "name": "textvault",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhinavsaxena2308/TextVault.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abhinavsaxena2308/TextVault/issues"
+  },
+  "homepage": "https://github.com/abhinavsaxena2308/TextVault#readme",
+  "description": "",
+  "devDependencies": {
+    "vite": "^7.1.9"
+  }
+}
