@@ -2,24 +2,31 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-const firebaseConfig = window.firebaseConfig;
-if (!firebaseConfig) throw new Error("Missing firebaseConfig");
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+};
+
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* DOM Elements */
 const textArea = document.getElementById('textArea');
 const tabsContainer = document.getElementById('tabs');
 const newTabBtn = document.getElementById('newTabBtn');
 const sessionModal = document.getElementById('sessionModal');
 const joinBtn = document.getElementById('joinBtn');
 const newSessionBtn = document.getElementById('newSessionBtn');
-const shareBtn = document.getElementById('shareBtn');
+// const shareBtn = document.getElementById('shareBtn');
 const saveBtn = document.getElementById('saveBtn');
 const sessionNameDisplay = document.getElementById('sessionName');
 
-/* State */
 let sessionID = '', sessionPass = '';
 let tabs = {};
 let activeTab = null;
@@ -137,9 +144,9 @@ newSessionBtn.addEventListener('click', async () => {
 
 newTabBtn.addEventListener('click', () => createTab());
 saveBtn.addEventListener('click', async () => { await saveAllTabs(); alert("💾 All tabs saved!"); });
-shareBtn.addEventListener('click', () => {
-  navigator.clipboard.writeText(`Session ID: ${sessionID}\nPassword: ${sessionPass}`).then(()=>alert("📋 Session details copied!"));
-});
+// shareBtn.addEventListener('click', () => {
+//   navigator.clipboard.writeText(`Session ID: ${sessionID}\nPassword: ${sessionPass}`).then(()=>alert("📋 Session details copied!"));
+// });
 
 textArea.addEventListener('input', () => {
   if (!activeTab) createTab();
