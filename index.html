@@ -1,48 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TextVault</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextVault - Secure Text Storage</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script type="module" src="/script.js"></script>
 </head>
 <body>
+    <script type="module">
+    import { getFirebaseConfig } from './config.js';
 
-  <!-- Navbar -->
-  <nav>
-    <div class="navbar-left">
-      <h1>TextVault 🔒</h1>
-      <span id="sessionName">No session</span>
+    // Initialize Firebase
+    const firebaseConfig = getFirebaseConfig();
+    firebase.initializeApp(firebaseConfig);
+
+    // The rest of your app initialization code
+    if (window.app) {
+        window.app.init();
+    }
+</script>
+
+    <!-- Authentication Modal -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-modal">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>TextVault Authentication</h2>
+                </div>
+                <p class="auth-subtitle">Enter your session credentials to access your secure vault</p>
+            </div>
+            <div class="auth-body">
+                <form id="authForm">
+                    <div class="form-group">
+                        <label for="sessionId">Session ID</label>
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="sessionId" placeholder="Enter session ID..." required autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionPassword">Session Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="sessionPassword" placeholder="Enter session password..." required autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="passwordToggle">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="auth-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="rememberSession">
+                            <span class="checkmark"></span>
+                            Remember this session
+                        </label>
+                    </div>
+                    <div class="auth-actions">
+                        <button type="submit" class="btn btn-primary auth-btn">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Access Vault
+                        </button>
+                    </div>
+                </form>
+                <div class="auth-info">
+                    <p><i class="fas fa-info-circle"></i> If the session doesn't exist, a new one will be created with your credentials.</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="navbar-right">
-      <button id="saveBtn" title="Save all tabs">💾 Save</button>
-      <button id="newSessionBtn" title="Create new session">🆕 New Session</button>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
     </div>
-  </nav>
 
-  <!-- Tabs -->
-  <div id="tabBar">
-    <div id="tabs"></div>
-    <button id="newTabBtn">+ New Tab</button>
-  </div>
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
 
-  <!-- Text Area -->
-  <textarea id="textArea" placeholder="Start typing..."></textarea>
+    <!-- Main Container -->
+    <div class="container" id="mainContainer" style="filter: blur(5px); pointer-events: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1 class="app-title">
+                        <i class="fas fa-vault"></i>
+                        TextVault
+                    </h1>
+                    <div class="session-badge" id="sessionBadge">
+                        <i class="fas fa-folder"></i>
+                        <span id="sessionName">Default Session</span>
+                    </div>
+                </div>
 
-  <!-- Session Modal -->
-  <!-- <div id="sessionModal">
-    <div class="modal-content">
-      <h2>Join Session</h2>
-      <input type="text" id="sessionID" placeholder="Session ID" autocomplete="off" value="">
-      <input type="password" id="sessionPass" placeholder="Password" autocomplete="off" value="">
-      <button id="joinBtn">Join Session</button>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="importBtn">
+                        <i class="fas fa-upload"></i>
+                        Import
+                    </button>
+                    <button class="btn btn-secondary" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="btn btn-danger" id="deleteAllBtn">
+                        <i class="fas fa-trash-alt"></i>
+                        Delete All
+                    </button>
+                    <button class="btn btn-secondary" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                    <button class="btn btn-primary" id="addNoteBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Note
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search and Filter -->
+            <div class="search-section">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search notes...">
+                </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" id="gridViewBtn" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="view-btn" id="listViewBtn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes Container -->
+            <div class="notes-container" id="notesContainer">
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Loading your notes...</p>
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-sticky-note"></i>
+                    </div>
+                    <h3>No Notes Yet</h3>
+                    <p>Create your first note to get started with TextVault</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('addNoteBtn').click()">
+                        <i class="fas fa-plus"></i>
+                        Create First Note
+                    </button>
+                </div>
+
+                <div class="notes-grid" id="notesGrid"></div>
+            </div>
+        </main>
     </div>
-  </div> -->
 
-  <!-- Toast -->
-  <div id="toast"></div>
+    <!-- Add/Edit Note Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Note</h3>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="noteForm">
+                    <div class="form-group">
+                        <label for="noteTitle">Note Title</label>
+                        <input type="text" id="noteTitle" placeholder="Enter note title..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="noteContent">Note Content</label>
+                        <textarea id="noteContent" placeholder="Enter your text content..." required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            <i class="fas fa-save"></i>
+                            Save Note
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-  <!-- Script -->
-  <script type="module" src="script.js" defer></script>
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal confirm-modal">
+            <div class="modal-header">
+                <h3 id="confirmTitle">Confirm Action</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+                <button class="btn btn-danger" id="confirmOk">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>

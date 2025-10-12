@@ -1,25 +1,35 @@
 {
   "name": "textvault",
   "version": "1.0.0",
-  "main": "script.js",
+  "description": "A beautiful, modern web application for securely storing and managing text notes with Firebase",
+  "main": "index.html",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "demo": "vite --open demo.html"
   },
+  "keywords": [
+    "notes",
+    "firebase",
+    "realtime",
+    "neumorphic",
+    "glassmorphic",
+    "responsive",
+    "text-storage"
+  ],
+  "author": "TextVault Team",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abhinavsaxena2308/TextVault.git"
+    "url": "https://github.com/yourusername/textvault.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/abhinavsaxena2308/TextVault/issues"
-  },
-  "homepage": "https://github.com/abhinavsaxena2308/TextVault#readme",
-  "description": "",
+  "homepage": "https://yourusername.github.io/textvault",
   "devDependencies": {
     "vite": "^7.1.9"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
